@@ -9,3 +9,18 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.leaflet-control-attribution {
+  background: transparent !important;
+  font-size: 9px !important;
+  opacity: 0.4 !important;
+}
+
+.leaflet-bottom.leaflet-right {
+  opacity: 0.3 !important;
+  font-size: 8px !important;
+}
+
+.leaflet-bottom.leaflet-right a {
+  color: #666 !important;
+}

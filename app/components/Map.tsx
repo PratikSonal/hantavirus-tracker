@@ -1,108 +1,31 @@
 "use client";
 
-import { useEffect } from "react";
-import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
+import { useEffect, useState } from "react";
+import { MapContainer, TileLayer, CircleMarker, Tooltip } from "react-leaflet";
 
-const COUNTRIES = [
-  {
-    name: "Netherlands",
-    lat: 52.3,
-    lng: 5.3,
-    confirmed: 3,
-    suspected: 1,
-    deaths: 2,
-    monitoring: 0,
-  },
-  {
-    name: "Germany",
-    lat: 51.2,
-    lng: 10.4,
-    confirmed: 1,
-    suspected: 0,
-    deaths: 1,
-    monitoring: 0,
-  },
-  {
-    name: "Switzerland",
-    lat: 46.8,
-    lng: 8.2,
-    confirmed: 1,
-    suspected: 0,
-    deaths: 0,
-    monitoring: 0,
-  },
-  {
-    name: "United Kingdom",
-    lat: 55.3,
-    lng: -3.4,
-    confirmed: 1,
-    suspected: 1,
-    deaths: 0,
-    monitoring: 0,
-  },
-  {
-    name: "South Africa",
-    lat: -30.5,
-    lng: 22.9,
-    confirmed: 1,
-    suspected: 0,
-    deaths: 0,
-    monitoring: 1,
-  },
-  {
-    name: "Argentina",
-    lat: -38.4,
-    lng: -63.6,
-    confirmed: 0,
-    suspected: 0,
-    deaths: 0,
-    monitoring: 0,
-  },
-  {
-    name: "Singapore",
-    lat: 1.3,
-    lng: 103.8,
-    confirmed: 0,
-    suspected: 1,
-    deaths: 0,
-    monitoring: 1,
-  },
-  {
-    name: "USA",
-    lat: 37.1,
-    lng: -95.7,
-    confirmed: 0,
-    suspected: 0,
-    deaths: 0,
-    monitoring: 7,
-  },
-  {
-    name: "Canada",
-    lat: 56.1,
-    lng: -106.3,
-    confirmed: 0,
-    suspected: 0,
-    deaths: 0,
-    monitoring: 2,
-  },
-];
-
-interface CountryData {
-  name: string;
-  lat: number;
-  lng: number;
+interface LocationData {
+  location: string;
+  lat: number | null;
+  lng: number | null;
   confirmed: number;
-  suspected: number;
+  probable: number;
   deaths: number;
-  monitoring: number;
+  critical: number;
+  hospitalized: number;
+  stable: number;
+  total: number;
 }
 
 interface MapProps {
-  onCountryClick: (country: CountryData) => void;
+  byLocation: LocationData[];
+  onLocationClick: (location: LocationData) => void;
 }
 
-export default function Map({ onCountryClick }: MapProps) {
+export default function Map({ byLocation, onLocationClick }: MapProps) {
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    // Fix Leaflet default icon paths in Next.js
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const L = require("leaflet");
     delete L.Icon.Default.prototype._getIconUrl;
@@ -111,45 +34,65 @@ export default function Map({ onCountryClick }: MapProps) {
       iconUrl: "/leaflet/marker-icon.png",
       shadowUrl: "/leaflet/marker-shadow.png",
     });
+    setMounted(true);
   }, []);
 
-  const getRadius = (country: CountryData) => {
-    const total = country.confirmed + country.suspected + country.monitoring;
-    return Math.max(8, total * 4);
+  const getRadius = (loc: LocationData): number => {
+    if (loc.total === 0) return 6;
+    return Math.max(10, loc.total * 10);
   };
 
-  const getColor = (country: CountryData) => {
-    if (country.deaths > 0) return "#dc2626";
-    if (country.confirmed > 0) return "#ea580c";
-    if (country.suspected > 0) return "#eab308";
-    return "#3b82f6";
+  const getColor = (loc: LocationData): string => {
+    if (loc.total === 0) return "#4b5563";
+    if (loc.deaths > 0) return "#dc2626";
+    if (loc.critical > 0) return "#ea580c";
+    if (loc.confirmed > 0) return "#f97316";
+    return "#eab308";
   };
+
+  const getPopup = (loc: LocationData): string => {
+    if (loc.total === 0) return `${loc.location} — WHO response country`;
+    return `${loc.location} — ${loc.total} case${loc.total !== 1 ? "s" : ""}`;
+  };
+
+  const plottable = byLocation.filter((l) => l.lat !== null && l.lng !== null);
+
+  if (!mounted) return null;
 
   return (
     <MapContainer
       center={[20, 0]}
       zoom={2}
       style={{ height: "100%", width: "100%" }}
+      zoomControl={false}
       scrollWheelZoom={true}
+      worldCopyJump={false}
+      minZoom={2}
+      maxZoom={8}
+      maxBounds={[[-85, -180], [85, 180]]}
+      maxBoundsViscosity={1.0}
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+        subdomains="abcd"
+        maxNativeZoom={19}
+        keepBuffer={4}
       />
-      {COUNTRIES.map((country) => (
+      {plottable.map((loc) => (
         <CircleMarker
-          key={country.name}
-          center={[country.lat, country.lng]}
-          radius={getRadius(country)}
-          fillColor={getColor(country)}
+          key={loc.location}
+          center={[loc.lat!, loc.lng!]}
+          radius={getRadius(loc)}
+          fillColor={getColor(loc)}
           color="#fff"
           weight={2}
           fillOpacity={0.8}
           eventHandlers={{
-            click: () => onCountryClick(country),
+            click: () => onLocationClick(loc),
           }}
         >
-          <Popup>{country.name}</Popup>
+          <Tooltip>{getPopup(loc)}</Tooltip>
         </CircleMarker>
       ))}
     </MapContainer>
