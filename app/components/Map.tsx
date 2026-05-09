@@ -3,6 +3,16 @@
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, CircleMarker, Tooltip } from "react-leaflet";
 
+interface CaseData {
+  id: number;
+  role: string;
+  status: string;
+  outcome: string;
+  currentLocation: string;
+  onsetDate: string;
+  notes: string;
+}
+
 interface LocationData {
   location: string;
   lat: number | null;
@@ -14,6 +24,7 @@ interface LocationData {
   hospitalized: number;
   stable: number;
   total: number;
+  cases: CaseData[];
 }
 
 interface MapProps {
