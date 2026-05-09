@@ -71,9 +71,9 @@ const CASE_MANIFEST = [
     role: "Passenger",
     status: "probable",
     outcome: "deceased",
-    currentLocation: "On board (died)",
+    currentLocation: "United Kingdom",
     onsetDate: "2026-04-06",
-    notes: "Adult male. Died on board Apr 11. No microbiological tests performed.",
+    notes: "Adult male. Died on board Apr 11. No microbiological tests performed. Body removed to Saint Helena (British Overseas Territory) on Apr 24.",
   },
   {
     id: 2,
@@ -98,7 +98,7 @@ const CASE_MANIFEST = [
     role: "Passenger",
     status: "confirmed",
     outcome: "deceased",
-    currentLocation: "On board (died)",
+    currentLocation: "Netherlands",
     onsetDate: "2026-04-28",
     notes: "Adult female. Died on board May 2. Post-mortem sample confirmed Andes virus in Netherlands.",
   },
@@ -254,7 +254,10 @@ async function scrapeWHO() {
       if (probable) out.cases_suspected = probable;
     }
 
-    const deathMatch = text.match(/including\s+(\w+)\s+deaths/i);
+    const deathMatch =
+      text.match(/(\w+)\s+deaths?\s*\(/i) ||
+      text.match(/including\s+(\w+)\s+deaths?/i) ||
+      text.match(/(\w+)\s+deaths?,\s+case\s+fatality/i);
     if (deathMatch) {
       const deaths = toInt(deathMatch[1]);
       if (deaths) out.deaths = deaths;
