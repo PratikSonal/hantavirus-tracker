@@ -5,15 +5,36 @@ const WHO_DON_URL =
   "https://www.who.int/emergencies/disease-outbreak-news/item/2026-DON600";
 
 const WORD_NUMBERS: Record<string, number> = {
-  one: 1, two: 2, three: 3, four: 4, five: 5,
-  six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
-  eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15,
+  one: 1,
+  two: 2,
+  three: 3,
+  four: 4,
+  five: 5,
+  six: 6,
+  seven: 7,
+  eight: 8,
+  nine: 9,
+  ten: 10,
+  eleven: 11,
+  twelve: 12,
+  thirteen: 13,
+  fourteen: 14,
+  fifteen: 15,
 };
 
 const MONTHS: Record<string, string> = {
-  January: "01", February: "02", March: "03", April: "04",
-  May: "05", June: "06", July: "07", August: "08",
-  September: "09", October: "10", November: "11", December: "12",
+  January: "01",
+  February: "02",
+  March: "03",
+  April: "04",
+  May: "05",
+  June: "06",
+  July: "07",
+  August: "08",
+  September: "09",
+  October: "10",
+  November: "11",
+  December: "12",
 };
 
 function toInt(s: string): number | null {
@@ -29,7 +50,7 @@ const FALLBACK = {
   deaths: 3,
   critical: 1,
   as_of: "2026-05-08",
-  source: "WHO DON600 (fallback)",
+  source: "WHO (fallback)",
   source_url: WHO_DON_URL,
 };
 
@@ -48,18 +69,18 @@ const CDC_SNAPSHOT = {
 // Coordinates for all countries/locations that appear in CASE_MANIFEST or RESPONSE_COUNTRIES
 // Used to place pins on the map
 const COUNTRY_COORDS: Record<string, [number, number]> = {
-  "Netherlands": [52.3, 5.3],
+  Netherlands: [52.3, 5.3],
   "South Africa": [-30.5, 22.9],
-  "Switzerland": [46.8, 8.2],
+  Switzerland: [46.8, 8.2],
   "United Kingdom": [55.3, -3.4],
-  "Germany": [51.2, 10.4],
-  "Argentina": [-38.4, -63.6],
-  "Spain": [40.4, -3.7],
+  Germany: [51.2, 10.4],
+  Argentina: [-38.4, -63.6],
+  Spain: [40.4, -3.7],
   "Cape Verde": [16.0, -24.0],
-  "Chile": [-35.7, -71.5],
+  Chile: [-35.7, -71.5],
   "United States": [37.1, -95.7],
-  "Singapore": [1.3, 103.8],
-  "Canada": [56.1, -106.3],
+  Singapore: [1.3, 103.8],
+  Canada: [56.1, -106.3],
 };
 
 // Sourced directly from WHO DON600 (8 May 2026)
@@ -73,7 +94,8 @@ const CASE_MANIFEST = [
     outcome: "deceased",
     currentLocation: "United Kingdom",
     onsetDate: "2026-04-06",
-    notes: "Adult male. Died on board Apr 11. No microbiological tests performed. Body removed to Saint Helena (British Overseas Territory) on Apr 24.",
+    notes:
+      "Adult male. Died on board Apr 11. No microbiological tests performed. Body removed to Saint Helena (British Overseas Territory) on Apr 24.",
   },
   {
     id: 2,
@@ -82,7 +104,8 @@ const CASE_MANIFEST = [
     outcome: "deceased",
     currentLocation: "South Africa",
     onsetDate: "2026-04-24",
-    notes: "Adult female, close contact of Case 1. Died Johannesburg Apr 26. PCR confirmed.",
+    notes:
+      "Adult female, close contact of Case 1. Died Johannesburg Apr 26. PCR confirmed.",
   },
   {
     id: 3,
@@ -91,7 +114,8 @@ const CASE_MANIFEST = [
     outcome: "critical",
     currentLocation: "South Africa",
     onsetDate: "2026-04-24",
-    notes: "Adult male. Evacuated from Ascension Island. In ICU Johannesburg. PCR + sequencing confirmed Andes.",
+    notes:
+      "Adult male. Evacuated from Ascension Island. In ICU Johannesburg. PCR + sequencing confirmed Andes.",
   },
   {
     id: 4,
@@ -100,7 +124,8 @@ const CASE_MANIFEST = [
     outcome: "deceased",
     currentLocation: "Netherlands",
     onsetDate: "2026-04-28",
-    notes: "Adult female. Died on board May 2. Post-mortem sample confirmed Andes virus in Netherlands.",
+    notes:
+      "Adult female. Died on board May 2. Post-mortem sample confirmed Andes virus in Netherlands.",
   },
   {
     id: 5,
@@ -109,7 +134,8 @@ const CASE_MANIFEST = [
     outcome: "hospitalized",
     currentLocation: "Netherlands",
     onsetDate: "2026-04-30",
-    notes: "Adult male, ship doctor. Evacuated to Netherlands May 6. PCR confirmed Andes. Currently stable.",
+    notes:
+      "Adult male, ship doctor. Evacuated to Netherlands May 6. PCR confirmed Andes. Currently stable.",
   },
   {
     id: 6,
@@ -118,7 +144,8 @@ const CASE_MANIFEST = [
     outcome: "hospitalized",
     currentLocation: "Netherlands",
     onsetDate: "2026-04-27",
-    notes: "Adult male, ship guide. Evacuated to Netherlands May 7. PCR confirmed Andes. Currently stable.",
+    notes:
+      "Adult male, ship guide. Evacuated to Netherlands May 7. PCR confirmed Andes. Currently stable.",
   },
   {
     id: 7,
@@ -127,7 +154,8 @@ const CASE_MANIFEST = [
     outcome: "hospitalized",
     currentLocation: "Switzerland",
     onsetDate: "2026-05-01",
-    notes: "Adult male. Disembarked St Helena Apr 22, flew to Switzerland. Self-isolated. PCR confirmed Andes May 5.",
+    notes:
+      "Adult male. Disembarked St Helena Apr 22, flew to Switzerland. Self-isolated. PCR confirmed Andes May 5.",
   },
   {
     id: 8,
@@ -136,30 +164,41 @@ const CASE_MANIFEST = [
     outcome: "stable",
     currentLocation: "Unknown",
     onsetDate: "2026-04-28",
-    notes: "Adult male. Disembarked Tristan da Cunha Apr 14. Probable case pending lab confirmation.",
+    notes:
+      "Adult male. Disembarked Tristan da Cunha Apr 14. Probable case pending lab confirmation.",
   },
 ];
 
 // All countries involved in WHO coordination per DON600
 const RESPONSE_COUNTRIES = [
-  "Argentina", "Cape Verde", "Chile", "Germany",
-  "Netherlands", "South Africa", "Spain", "Switzerland", "United Kingdom",
+  "Argentina",
+  "Cape Verde",
+  "Chile",
+  "Germany",
+  "Netherlands",
+  "South Africa",
+  "Spain",
+  "Switzerland",
+  "United Kingdom",
 ];
 
 function aggregateByLocation() {
-  const byLocation: Record<string, {
-    location: string;
-    lat: number | null;
-    lng: number | null;
-    confirmed: number;
-    probable: number;
-    deaths: number;
-    critical: number;
-    hospitalized: number;
-    stable: number;
-    total: number;
-    cases: typeof CASE_MANIFEST;
-  }> = {};
+  const byLocation: Record<
+    string,
+    {
+      location: string;
+      lat: number | null;
+      lng: number | null;
+      confirmed: number;
+      probable: number;
+      deaths: number;
+      critical: number;
+      hospitalized: number;
+      stable: number;
+      total: number;
+      cases: typeof CASE_MANIFEST;
+    }
+  > = {};
 
   // Seed all response countries so they appear even with 0 cases
   for (const country of RESPONSE_COUNTRIES) {
@@ -246,7 +285,9 @@ async function scrapeWHO() {
       if (total) out.cases_total = total;
     }
 
-    const confirmedMatch = text.match(/\((\w+)\s+confirmed\s+and\s+(\w+)\s+probable/i);
+    const confirmedMatch = text.match(
+      /\((\w+)\s+confirmed\s+and\s+(\w+)\s+probable/i,
+    );
     if (confirmedMatch) {
       const confirmed = toInt(confirmedMatch[1]);
       const probable = toInt(confirmedMatch[2]);
@@ -264,13 +305,13 @@ async function scrapeWHO() {
     }
 
     const dateMatch = text.match(
-      /[Aa]s of (\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})/
+      /[Aa]s of (\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})/,
     );
     if (dateMatch) {
       out.as_of = `${dateMatch[3]}-${MONTHS[dateMatch[2]]}-${dateMatch[1].padStart(2, "0")}`;
     }
 
-    out.source = "WHO DON600 (live)";
+    out.source = "WHO (live)";
 
     return {
       summary: out,
@@ -290,7 +331,8 @@ async function scrapeWHO() {
 }
 
 export async function GET() {
-  const { summary, byLocation, responseCountries, caseManifest } = await scrapeWHO();
+  const { summary, byLocation, responseCountries, caseManifest } =
+    await scrapeWHO();
   return NextResponse.json({
     generatedAt: new Date().toISOString(),
     outbreak: summary,
