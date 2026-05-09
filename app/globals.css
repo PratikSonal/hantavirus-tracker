@@ -114,8 +114,25 @@ body {
   border-top-color: #3f3f46 !important;
 }
 
+/* Remove focus ring on map pins */
+.leaflet-interactive:focus {
+  outline: none !important;
+}
+
 /* News ticker scroll animation */
 @keyframes ticker {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+
+/* Mobile bottom sheet slide up */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
